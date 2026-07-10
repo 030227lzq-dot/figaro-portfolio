@@ -91,7 +91,6 @@ function render() {
         <div class="hero-copy">
           <h1 id="hero-title">${locale === "zh" ? "个人艺术档案馆" : "Personal Art Archive"}</h1>
           <p class="hero-title">${text(profile.title)}</p>
-          <p class="hero-intro">${text(profile.intro)}</p>
         </div>
         <aside class="hero-index" aria-label="${locale === "zh" ? "视觉关键词" : "Visual keywords"}">
           <span>GOTHIC</span>
