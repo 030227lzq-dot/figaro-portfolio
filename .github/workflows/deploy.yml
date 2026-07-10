@@ -1,0 +1,54 @@
+name: 部署作品集
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出源码
+        uses: actions/checkout@v7
+
+      - name: 安装 pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 构建网站
+        run: pnpm build
+
+      - name: 配置页面服务
+        uses: actions/configure-pages@v6
+
+      - name: 上传网站文件
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+      - name: 发布网站
+        id: deployment
+        uses: actions/deploy-pages@v4
